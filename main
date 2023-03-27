@@ -1,0 +1,45 @@
+import cv2
+
+# загружаем видео-файл
+video = cv2.VideoCapture("имя_вашего_видео_файла.mp4")
+
+# определяем шрифт и его параметры
+font = cv2.FONT_HERSHEY_SIMPLEX
+fontScale = 1
+thickness = 2
+color = (0, 0, 255)  # красный цвет
+
+# определяем размер кадра
+frame_width = int(video.get(3))
+frame_height = int(video.get(4))
+
+# определяем новый видео-файл
+output_video = cv2.VideoWriter("новое_имя_видео_файла.mp4",
+                               cv2.VideoWriter_fourcc(*"mp4v"),
+                               30, (frame_width, frame_height))
+
+# проходимся по каждому кадру
+while True:
+    ret, frame = video.read()
+
+    # если видео закончилось, выходим из цикла
+    if not ret:
+        break
+
+    # наложение текста на каждый кадр
+    cv2.putText(frame, "TEST", (50, 50), font, fontScale, color, thickness, cv2.LINE_AA)
+
+    # сохранение измененного кадра в новую последовательность кадров
+    output_video.write(frame)
+
+    # отображение кадра с текстом
+    cv2.imshow("Frame", frame)
+
+    # выход по клавише "q"
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
+
+# освобождаем ресурсы
+video.release()
+output_video.release()
+cv2.destroyAllWindows()
